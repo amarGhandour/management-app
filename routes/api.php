@@ -1,6 +1,8 @@
 <?php
 
-use App\Http\Controllers\ProjectsController;
+use App\Http\Controllers\API\V1\ProjectsController;
+use App\Http\Controllers\API\V1\ProjectTasksController;
+use App\Http\Controllers\API\V1\TasksController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,12 +25,13 @@ Route::prefix('v1')->group(function () {
             return $request->user();
         });
 
-        Route::get('/projects', [ProjectsController::class, 'index'])->name('projects.index');
-        Route::get('/projects/{project}', [ProjectsController::class, 'show'])->name('projects.show');
-        Route::post('/projects', [ProjectsController::class, 'store'])->name('projects.store');
-        Route::patch('/projects/{project}', [ProjectsController::class, 'update'])->name('projects.update');
-        Route::delete('/projects/{project}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
+        // projects
+        Route::apiResource('projects', ProjectsController::class);
 
+        // tasks
+        Route::post('/projects/{project}/tasks', [ProjectTasksController::class, 'store'])->name('tasks.store');
+        Route::delete('/tasks/{task}', [ProjectTasksController::class, 'destroy'])->name('tasks.destroy');
+        Route::patch('/tasks/{task}', [ProjectTasksController::class, 'update'])->name('tasks.update');
     });
 
 });

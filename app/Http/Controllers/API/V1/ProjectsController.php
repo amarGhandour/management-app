@@ -1,10 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\V1;
 
+use App\Http\Controllers\Controller;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use function abort_if;
+use function auth;
+use function response;
 
 class ProjectsController extends Controller
 {
@@ -22,7 +26,7 @@ class ProjectsController extends Controller
 
         abort_if(auth()->user()->isNot($project->owner), Response::HTTP_FORBIDDEN);
 
-        return $project;
+        return $project->load('tasks');
     }
 
     public function store(Request $request)
