@@ -18,7 +18,7 @@ class CreateTasksTest extends TestCase
         $this->postJson(route('tasks.store', 34343), [])->assertUnauthorized();
     }
 
-    public function test_authenticated_user_cannot_create_tasks_to_projects_of_others()
+    public function test_authenticated_user_cannot_add_tasks_to_projects_of_others()
     {
         Sanctum::actingAs(User::factory()->create());
         $attributes = [

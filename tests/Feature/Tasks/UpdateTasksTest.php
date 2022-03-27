@@ -30,12 +30,12 @@ class UpdateTasksTest extends TestCase
         $this->signIn();
 
         $project = Project::factory()->create(['user_id' => auth()->id()]);
-        $task = Task::factory()->create(['user_id' => auth()->id(), 'project_id' => $project->id]);
+        $task = $project->addTask(['body' => 'foo']);
 
-        $attributes = ['body' => $this->faker->sentence,];
+        $attributes = ['body' => $this->faker->sentence, 'is_done' => 1];
 
         $this->patchJson(route('tasks.update', $task), $attributes)->assertNoContent();
-        $this->assertDatabaseHas('tasks', $attributes += ['user_id' => auth()->id(), 'project_id' => $project->id]);
+        $this->assertDatabaseHas('tasks', $attributes + ['user_id' => auth()->id(), 'project_id' => $project->id]);
 
     }
 
@@ -44,7 +44,7 @@ class UpdateTasksTest extends TestCase
         $this->signIn();
 
         $project = Project::factory()->create(['user_id' => auth()->id()]);
-        $task = Task::factory()->create(['user_id' => auth()->id(), 'project_id' => $project->id]);
+        $task = $project->addTask(['body' => 'foo']);
 
         $attributes = ['body' => ''];
 

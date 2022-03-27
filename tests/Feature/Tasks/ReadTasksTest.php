@@ -3,7 +3,6 @@
 namespace Tests\Feature\Tasks;
 
 use App\Models\Project;
-use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -19,9 +18,9 @@ class ReadTasksTest extends TestCase
 
         $this->getJson(route('projects.show', $project))->assertJson($project->toArray());
 
-        $task = Task::factory()->create(['project_id' => $project->id, 'user_id' => auth()->id()]);
+        $task = $project->addTask(['body' => 'foo']);
 
-        $this->getJson(route('projects.show', $project))->assertJsonFragment($task->toArray());
+        $this->getJson(route('projects.show', $project))->assertJsonFragment($task->fresh()->toArray());
 
     }
 }

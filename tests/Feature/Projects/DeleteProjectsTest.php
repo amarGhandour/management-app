@@ -3,10 +3,8 @@
 namespace Tests\Feature\Projects;
 
 use App\Models\Project;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 use function auth;
 use function route;
@@ -24,7 +22,7 @@ class DeleteProjectsTest extends TestCase
     public function test_user_cannot_delete_projects_of_others()
     {
         $notOwnedProject = Project::factory()->create();
-        Sanctum::actingAs(User::factory()->create());
+        $this->signIn();
 
         $this->deleteJson(route('projects.destroy', $notOwnedProject))->assertForbidden();
 
@@ -34,7 +32,7 @@ class DeleteProjectsTest extends TestCase
     public function test_authenticated_user_can_delete_his_projects()
     {
 
-        Sanctum::actingAs(User::factory()->create());
+        $this->signIn();
         $ownedProject = Project::factory()->create(['user_id' => auth()->id()]);
 
         $this->deleteJson(route('projects.destroy', $ownedProject))->assertNoContent();

@@ -3,7 +3,6 @@
 namespace Tests\Unit;
 
 use App\Models\Project;
-use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -48,13 +47,13 @@ class ProjectTest extends TestCase
     {
         $this->signIn();
         $project = Project::factory()->create(['user_id' => auth()->id()]);
-        $task = Task::factory()->create(['user_id' => auth()->id(), 'project_id' => $project->id]);
+        $project->addTask($attributes = ['body' => 'foo']);
 
-        $this->assertDatabaseHas('tasks', $task->toArray());
+        $this->assertDatabaseHas('tasks', $attributes += ['project_id' => $project->id]);
 
         $project->delete();
 
-        $this->assertDatabaseMissing('tasks', $task->toArray());
+        $this->assertDatabaseMissing('tasks', $attributes);
     }
 
 }

@@ -18,18 +18,18 @@ class ProjectTasksController extends Controller
 
         $attributes = $request->validate(['body' => ['required']]);
 
-        $project->addTask($attributes);
+        $task = $project->addTask($attributes);
 
-        $project->load('tasks');
+//        $project->load('tasks');
 
-        return response()->json($project, Response::HTTP_CREATED);
+        return response()->json($task, Response::HTTP_CREATED);
     }
 
     public function update(Request $request, Task $task)
     {
         abort_if(auth()->user()->isNot($task->owner), Response::HTTP_FORBIDDEN);
 
-        $attributes = $request->validate(['body' => ['required']]);
+        $attributes = $request->validate(['body' => ['required'], 'is_done' => ['sometimes']]);
 
         $task->updateOrFail($attributes);
 

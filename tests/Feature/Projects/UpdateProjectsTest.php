@@ -3,10 +3,8 @@
 namespace Tests\Feature\Projects;
 
 use App\Models\Project;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 use function auth;
 use function route;
@@ -23,7 +21,7 @@ class UpdateProjectsTest extends TestCase
     public function test_authenticated_user_cannot_update_projects_of_others()
     {
         $notOwnedProject = Project::factory()->create();
-        Sanctum::actingAs(User::factory()->create());
+        $this->signIn();
 
         $this->patchJson(route('projects.update', $notOwnedProject), [])->assertForbidden();
 
@@ -34,7 +32,7 @@ class UpdateProjectsTest extends TestCase
     public function test_authenticated_user_can_update_his_projects()
     {
 
-        Sanctum::actingAs(User::factory()->create());
+        $this->signIn();
         $project = Project::factory()->create(['user_id' => auth()->id()]);
         $attributes = [
             'title' => $this->faker->sentence,
@@ -49,7 +47,7 @@ class UpdateProjectsTest extends TestCase
     public function test_a_project_requires_a_title()
     {
 
-        Sanctum::actingAs(User::factory()->create());
+        $this->signIn();
         $project = Project::factory()->create(['user_id' => auth()->id()]);
         $attributes = Project::factory()->raw(['title' => '']);
 
@@ -61,7 +59,7 @@ class UpdateProjectsTest extends TestCase
 
     public function test_a_project_requires_a_description()
     {
-        Sanctum::actingAs(User::factory()->create());
+        $this->signIn();
         $project = Project::factory()->create(['user_id' => auth()->id()]);
         $attributes = Project::factory()->raw(['description' => null]);
 

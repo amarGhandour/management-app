@@ -22,7 +22,7 @@ class ReadProjectsTest extends TestCase
 
     public function test_an_authenticated_user_can_not_retrieve_projects_of_others()
     {
-        Sanctum::actingAs(User::factory()->create());
+        $this->signIn();
         Project::factory(3)->create();
 
         $this->getJson(route('projects.index'))->assertOk()->assertJsonCount(0);
@@ -31,7 +31,7 @@ class ReadProjectsTest extends TestCase
     public function test_authenticated_user_can_retrieve_his_projects()
     {
 
-        Sanctum::actingAs(User::factory()->create());
+        $this->signIn();
         Project::factory()->create(['user_id' => auth()->id()]);
 
         $this->getJson(route('projects.index'))->assertOk()->assertJsonCount(1);

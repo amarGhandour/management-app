@@ -30,10 +30,11 @@ class DeleteTasksTest extends TestCase
         $this->signIn();
 
         $project = Project::factory()->create(['user_id' => auth()->id()]);
-        $task = Task::factory()->create(['user_id' => auth()->id(), 'project_id' => $project->id]);
+
+        $task = $project->addTask(['body' => 'foo']);
 
         $this->deleteJson(route('tasks.destroy', $task))->assertNoContent();
 
-        $this->assertDatabaseMissing('tasks', $task->toArray());
+        $this->assertDatabaseMissing('tasks', ['body' => 'foo', 'project_id' => $project->id]);
     }
 }
