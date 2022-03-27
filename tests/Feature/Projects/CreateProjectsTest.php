@@ -24,7 +24,8 @@ class CreateProjectsTest extends TestCase
         $this->signIn();
         $attributes = [
             'title' => $this->faker->sentence,
-            'description' => $this->faker->paragraph,
+            'description' => $this->faker->sentence,
+            'notes' => $this->faker->paragraph,
         ];
 
         $this->postJson(route('projects.store'), $attributes)

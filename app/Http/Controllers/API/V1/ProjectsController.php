@@ -35,6 +35,7 @@ class ProjectsController extends Controller
         $attributes = $request->validate([
             'title' => ['required'],
             'description' => ['required'],
+            'notes' => ['sometimes']
         ]);
 
         $project = auth()->user()->projects()->create($attributes);
@@ -45,11 +46,12 @@ class ProjectsController extends Controller
     public function update(Request $request, Project $project)
     {
 
-        abort_if(auth()->user()->isNot($project->owner), Response::HTTP_FORBIDDEN);
+        $this->authorize('update', $project);
 
         $attributes = $request->validate([
             'title' => ['required'],
             'description' => ['required'],
+            'notes' => ['sometimes'],
         ]);
 
         $project->updateOrFail($attributes);
@@ -61,7 +63,7 @@ class ProjectsController extends Controller
     public function destroy(Project $project)
     {
 
-        abort_if(auth()->user()->isNot($project->owner), Response::HTTP_FORBIDDEN);
+        $this->authorize('update', $project);
 
         $project->delete();
 

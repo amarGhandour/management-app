@@ -14,20 +14,18 @@ class ProjectTasksController extends Controller
     public function store(Request $request, Project $project)
     {
 
-        abort_if(auth()->user()->isNot($project->owner), Response::HTTP_FORBIDDEN);
+        $this->authorize('update', $project);
 
         $attributes = $request->validate(['body' => ['required']]);
 
         $task = $project->addTask($attributes);
-
-//        $project->load('tasks');
 
         return response()->json($task, Response::HTTP_CREATED);
     }
 
     public function update(Request $request, Task $task)
     {
-        abort_if(auth()->user()->isNot($task->owner), Response::HTTP_FORBIDDEN);
+        $this->authorize('update', $task->project);
 
         $attributes = $request->validate(['body' => ['required'], 'is_done' => ['sometimes']]);
 
