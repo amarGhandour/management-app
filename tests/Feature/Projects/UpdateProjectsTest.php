@@ -36,13 +36,29 @@ class UpdateProjectsTest extends TestCase
         $project = Project::factory()->create(['user_id' => auth()->id()]);
         $attributes = [
             'title' => $this->faker->sentence,
-            'description' => $this->faker->paragraph,
+            'description' => $this->faker->sentence,
+            'notes' => $this->faker->paragraph,
         ];
 
         $this->patchJson(route('projects.update', $project), $attributes)->assertNoContent();
 
         $this->assertDatabaseHas('projects', $attributes + ['user_id' => auth()->id(), 'id' => $project->id]);
     }
+
+    public function test_update_only_notes()
+    {
+
+        $this->signIn();
+        $project = Project::factory()->create(['user_id' => auth()->id()]);
+        $attributes = [
+            'notes' => $this->faker->paragraph,
+        ];
+
+        $this->patchJson(route('projects.update', $project), $attributes)->assertNoContent();
+
+        $this->assertDatabaseHas('projects', $attributes + ['user_id' => auth()->id(), 'id' => $project->id]);
+    }
+
 
     public function test_a_project_requires_a_title()
     {
