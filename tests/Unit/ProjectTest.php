@@ -56,4 +56,11 @@ class ProjectTest extends TestCase
         $this->assertDatabaseMissing('tasks', $attributes);
     }
 
+    public function test_it_has_activities()
+    {
+
+        $project = Project::factory()->create();
+
+        $this->assertCount(1, $project->activity);
+    }
 }

@@ -39,6 +39,20 @@ class UpdateTasksTest extends TestCase
 
     }
 
+    public function test_update_is_done_only()
+    {
+        $this->signIn();
+
+        $project = Project::factory()->create(['user_id' => auth()->id()]);
+        $task = $project->addTask(['body' => 'foo']);
+
+        $attributes = ['is_done' => 1];
+
+        $this->patchJson(route('tasks.update', $task), $attributes)->assertNoContent();
+        $this->assertDatabaseHas('tasks', $attributes + ['user_id' => auth()->id(), 'project_id' => $project->id]);
+
+    }
+
     public function test_it_require_a_body()
     {
         $this->signIn();

@@ -21,4 +21,13 @@ class UserTest extends TestCase
         Project::factory()->create(['user_id' => auth()->id()]);
         $this->assertCount(1, auth()->user()->fresh()->projects);
     }
+
+    public function test_knows_his_activities()
+    {
+        $this->signIn();
+
+        auth()->user()->projects()->create(Project::factory()->raw());
+
+        $this->assertCount(1, auth()->user()->activity);
+    }
 }
