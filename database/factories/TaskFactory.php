@@ -20,7 +20,7 @@ class TaskFactory extends Factory
     {
         return [
             'body' => $this->faker->sentence,
-            'is_done' => 0,
+            'completed' => 0,
             'user_id' => User::factory(),
             'project_id' => Project::factory(),
         ];

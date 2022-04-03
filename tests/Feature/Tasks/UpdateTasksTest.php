@@ -32,21 +32,21 @@ class UpdateTasksTest extends TestCase
         $project = Project::factory()->create(['user_id' => auth()->id()]);
         $task = $project->addTask(['body' => 'foo']);
 
-        $attributes = ['body' => $this->faker->sentence, 'is_done' => 1];
+        $attributes = ['body' => $this->faker->sentence, 'completed' => 1];
 
         $this->patchJson(route('tasks.update', $task), $attributes)->assertNoContent();
         $this->assertDatabaseHas('tasks', $attributes + ['user_id' => auth()->id(), 'project_id' => $project->id]);
 
     }
 
-    public function test_update_is_done_only()
+    public function test_update_completed_only()
     {
         $this->signIn();
 
         $project = Project::factory()->create(['user_id' => auth()->id()]);
         $task = $project->addTask(['body' => 'foo']);
 
-        $attributes = ['is_done' => 1];
+        $attributes = ['completed' => 1];
 
         $this->patchJson(route('tasks.update', $task), $attributes)->assertNoContent();
         $this->assertDatabaseHas('tasks', $attributes + ['user_id' => auth()->id(), 'project_id' => $project->id]);

@@ -15,9 +15,10 @@ return new class extends Migration {
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
             $table->string('type');
-            $table->unsignedBigInteger('subject_id');
-            $table->string('subject_type');
-            $table->foreignId('user_id');
+            $table->foreignId('project_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->nullableMorphs('subject');
+            $table->text('changes')->nullable();
             $table->timestamps();
         });
     }

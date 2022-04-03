@@ -27,9 +27,11 @@ class ProjectTasksController extends Controller
     {
         $this->authorize('update', $task->project);
 
-        $attributes = $request->validate(['body' => ['required', 'sometimes'], 'is_done' => ['sometimes']]);
+        $attributes = $request->validate(['body' => ['required', 'sometimes']]);
 
         $task->updateOrFail($attributes);
+
+        $request->completed ? $task->complete() : $task->incomplete();
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }

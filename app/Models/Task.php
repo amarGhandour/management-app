@@ -14,6 +14,8 @@ class Task extends Model
 
     protected $touches = ['project'];
 
+    protected static $recordableEvents = ['created', 'deleted'];
+
     public function owner()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -23,4 +25,17 @@ class Task extends Model
     {
         return $this->belongsTo(Project::class, 'project_id');
     }
+
+    public function complete()
+    {
+        $this->update(['completed' => true]);
+        $this->recordsActivity('completed');
+    }
+
+    public function incomplete()
+    {
+        $this->update(['completed' => false]);
+        $this->recordsActivity('uncompleted');
+    }
+
 }
