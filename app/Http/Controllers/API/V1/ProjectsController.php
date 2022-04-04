@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use function abort_if;
 use function auth;
 use function response;
 
@@ -22,8 +21,7 @@ class ProjectsController extends Controller
 
     public function show(Project $project)
     {
-
-        abort_if(auth()->user()->isNot($project->owner), Response::HTTP_FORBIDDEN);
+        $this->authorize('update', $project);
 
         return $project->load('tasks');
     }

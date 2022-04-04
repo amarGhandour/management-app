@@ -69,15 +69,15 @@ class ProjectPolicy
     }
 
     /**
-     * Determine whether the user can restore the model.
+     * Determine whether the user can manage the project.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Project $project
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Project $project)
+    public function manage(User $user, Project $project)
     {
-        //
+        return $user->is($project->owner);
     }
 
     /**

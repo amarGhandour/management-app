@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\V1\ProjectInvitationsController;
 use App\Http\Controllers\API\V1\ProjectsController;
 use App\Http\Controllers\API\V1\ProjectTasksController;
 use App\Http\Controllers\API\V1\TasksController;
@@ -27,6 +28,9 @@ Route::prefix('v1')->group(function () {
 
         // projects
         Route::apiResource('projects', ProjectsController::class);
+
+        // project-invitation
+        Route::post('/projects/{project}/invitation', [ProjectInvitationsController::class, 'store'])->name('project-invitations.store');
 
         // tasks
         Route::post('/projects/{project}/tasks', [ProjectTasksController::class, 'store'])->name('tasks.store');
