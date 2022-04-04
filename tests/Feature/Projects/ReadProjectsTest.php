@@ -62,5 +62,23 @@ class ReadProjectsTest extends TestCase
             ]);
     }
 
+    public function test_users_can_retrieve_all_projects_they_have_been_invited_to_on_their_dashboard()
+    {
+        $this->signIn($jhon = User::factory()->create());
+        Project::factory()->create(['user_id' => auth()->id()]);
+
+        $this->getJson(route('projects.index'))->assertOk();
+
+        $sallyProject = Project::factory()->create();
+        $sallyProject->invite($jhon);
+
+        $ahmedProject = Project::factory()->create();
+        $ahmedProject->invite($sallyProject->owner);
+
+        $this->getJson(route('projects.index'))->assertJsonCount(2);
+
+
+    }
+
 
 }

@@ -15,8 +15,7 @@ class ProjectsController extends Controller
 
     public function index()
     {
-
-        $projects = Project::where('user_id', auth()->id())->get();
+        $projects = auth()->user()->accessibleProjects();
 
         return response()->json($projects);
     }
@@ -62,8 +61,7 @@ class ProjectsController extends Controller
 
     public function destroy(Project $project)
     {
-
-        $this->authorize('update', $project);
+        $this->authorize('delete', $project);
 
         $project->delete();
 
